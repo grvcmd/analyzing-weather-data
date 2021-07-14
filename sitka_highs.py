@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
@@ -12,21 +13,24 @@ with open(filename) as f:
     for index, column_header in enumerate(header_row):
         print(index, column_header)
 
-    # Get the high temps
-    highs = []
+    # Get dates and high temps from this file
+    dates, highs = [], []
     for row in reader:
+        current_date = datetime.strptime(row[2], '%Y-%m-%d')
         high = int(row[5])
+        dates.append(current_date)
         highs.append(high)
 
     # Plot the high temps
     plt.style.use('seaborn')
     fig, ax = plt.subplots()
     ax: Axes
-    ax.plot(highs, c='red')
+    ax.plot(dates, highs, c='red')
 
     # Format the plot
     ax.set_title("Daily high temperatures, July 2018", fontsize=24)
     ax.set_xlabel('', fontsize=16)
+    fig.autofmt_xdate()
     ax.set_ylabel('Temperature (F)', fontsize=16)
     ax.tick_params(axis='both', which='major', labelsize=16)
 
